@@ -33,6 +33,7 @@ body {
 
 .search-input:focus {
   border-color: var(--accent-color);
+  outline: var(--accent-color);
 }
 
 .btn {
