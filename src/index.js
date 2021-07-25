@@ -24,6 +24,7 @@ refs.searchForm.addEventListener('submit', onSearch);
 refs.loadMoreBtn.addEventListener('click', onLoadMore)
 
 function onSearch(e) {
+    clearContainer()
     e.preventDefault();
     
     newApiService.query = e.currentTarget.elements.query.value.trim();
@@ -34,19 +35,18 @@ function onSearch(e) {
     }
 
     newApiService.resetPage();
-    clearContainer();
-    
-    newApiService.fetchImages()
-        .then(addImageMarkup)
-        .catch(onFetchError);
-    
-    newApiService.fetchImages()
-        .then(removeClassButton)
+    onLoadMore();
+    removeClassButton();
 };
 
 function onLoadMore() {
-    newApiService.fetchImages()
-        .then(addImageMarkup)
+    newApiService.fetchImages().then(data => {
+        if (data.length === 0) {
+            return onFetchError();
+        }
+        refs.loadMoreBtn.classList.remove('load-more');
+        addImageMarkup(data);
+    })
 }
 
 function addImageMarkup(hits) {
@@ -57,15 +57,17 @@ function addImageMarkup(hits) {
     });
 }
 
-function removeClassButton(hits) {
-    if (hits.length < 12) {
-        return;
-    }
-    refs.loadMoreBtn.classList.remove('load-more');
+function removeClassButton() {
+    newApiService.fetchImages().then(data => {
+        if (data.length < 12) {
+            refs.loadMoreBtn.classList.add('load-more');
+        }
+    })
 }
 
 function clearContainer() {
     refs.galleryContainer.innerHTML = '';
+    refs.loadMoreBtn.classList.add('load-more');
 }
 
 function onFetchError() {
@@ -73,6 +75,6 @@ function onFetchError() {
         text: 'Sorry, no images could be found for this request!',
         sticker: false,
         hide: true,
-        delay: 1500,
+        delay: 2000,
     })
 }
