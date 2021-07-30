@@ -2,24 +2,20 @@ import imageCardTpl from './templates/image-card.hbs';
 import './css/styles.css'
 import NewApiService from './js/apiService';
 
+// Плагин открытия модального окна (вовремя нажатия на картинку)
 import * as basicLightbox from 'basiclightbox';
 import 'basiclightbox/dist/basicLightbox.min.css';
 
+// Для ошибки
 import { error } from '@pnotify/core';
 import '@pnotify/core/dist/BrightTheme.css';
 import '@pnotify/core/dist/PNotify.css';
-// import LoadNMoreBtn from './js/load-more-btn';
 
 const refs = {
     searchForm: document.querySelector('.search-form'),
     galleryContainer: document.querySelector('.gallery'),
     loadMoreBtn: document.querySelector('.btn-load-more'),
 }
-
-// const loadMoreBtn = new LoadNMoreBtn({
-//     selector: '[data-action="load-more"]',
-//     hidden: true,
-// })
 
 const newApiService = new NewApiService();
 
@@ -40,6 +36,7 @@ function onSearch(e) {
 
     newApiService.resetPage();
     onLoadMore();
+    newApiService.incrementPage();
 };
 
 function onLoadMore() {
@@ -59,7 +56,7 @@ function addImageMarkup(hits) {
     refs.galleryContainer.insertAdjacentHTML('beforeend', imageCardTpl(hits));
     refs.galleryContainer.scrollIntoView({
         behavior: 'smooth',
-        block: 'end',
+        block: 'start',
     });
 }
 
