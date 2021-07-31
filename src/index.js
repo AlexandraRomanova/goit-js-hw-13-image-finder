@@ -56,7 +56,7 @@ function addImageMarkup(hits) {
     refs.galleryContainer.insertAdjacentHTML('beforeend', imageCardTpl(hits));
     refs.galleryContainer.scrollIntoView({
         behavior: 'smooth',
-        block: 'start',
+        block: 'end',
     });
 }
 
